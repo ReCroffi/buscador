@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="pt-BR">
+  <body style="margin:0;background:#09090b;color:#f4f4f5;font-family:Arial,sans-serif">
+    <div style="max-width:620px;margin:auto;padding:24px">
+      <h1 style="font-size:24px;margin:0 0 12px">Preco baixou</h1>
+      <p style="color:#d4d4d8">Encontramos uma oferta abaixo da sua meta.</p>
+      <table style="width:100%;border-collapse:collapse;background:#18181b;border-radius:8px;overflow:hidden">
+        <tr><td style="padding:12px;color:#a1a1aa">Produto</td><td style="padding:12px">{{ product }}</td></tr>
+        <tr><td style="padding:12px;color:#a1a1aa">Loja</td><td style="padding:12px">{{ store }}</td></tr>
+        <tr><td style="padding:12px;color:#a1a1aa">Preco atual</td><td style="padding:12px">R$ {{ current_price }}</td></tr>
+        <tr><td style="padding:12px;color:#a1a1aa">Meta</td><td style="padding:12px">R$ {{ target_price }}</td></tr>
+      </table>
+      <p style="margin-top:24px"><a href="{{ url }}" style="background:#06b6d4;color:#111827;padding:12px 18px;border-radius:6px;text-decoration:none;font-weight:bold">Abrir oferta</a></p>
+    </div>
+  </body>
+</html>
+

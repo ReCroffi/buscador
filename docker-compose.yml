@@ -1,0 +1,67 @@
+services:
+  app:
+    build: .
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build: .
+    command: celery -A app.tasks.celery_app.celery_app worker --loglevel=INFO
+    env_file: .env
+    volumes:
+      - .:/app
+    depends_on:
+      - app
+      - redis
+
+  beat:
+    build: .
+    command: celery -A app.tasks.celery_app.celery_app beat --loglevel=INFO
+    env_file: .env
+    volumes:
+      - .:/app
+    depends_on:
+      - worker
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: buscador
+      POSTGRES_PASSWORD: buscador
+      POSTGRES_DB: buscador
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buscador -d buscador"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+
+volumes:
+  postgres_data:
+

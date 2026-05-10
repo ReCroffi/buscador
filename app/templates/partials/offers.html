@@ -1,0 +1,48 @@
+{% if offers %}
+<div class="mb-3 flex items-center justify-between">
+  <h2 class="text-lg font-semibold text-white">{{ offers|length }} ofertas exatas</h2>
+  <span class="text-xs text-zinc-400">Ordenado por preco total, pix, desconto e frete</span>
+</div>
+<div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+  {% for offer in offers %}
+  <article class="grid gap-3 rounded-lg border border-zinc-800 bg-zinc-900 p-4">
+    <div class="flex gap-3">
+      {% if offer.image_url %}
+      <img src="{{ offer.image_url }}" alt="" class="h-20 w-20 rounded-md object-contain bg-white" loading="lazy" />
+      {% endif %}
+      <div class="min-w-0">
+        <h3 class="line-clamp-3 text-sm font-medium text-zinc-100">{{ offer.title }}</h3>
+        <p class="mt-1 text-xs text-zinc-400">{{ offer.store }} · score {{ offer.match_score }}</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="rounded-md bg-zinc-950 p-2">
+        <span class="block text-xs text-zinc-500">Total</span>
+        <strong class="text-cyan-300">R$ {{ offer.total_price or offer.current_price }}</strong>
+      </div>
+      <div class="rounded-md bg-zinc-950 p-2">
+        <span class="block text-xs text-zinc-500">Pix</span>
+        <strong>R$ {{ offer.pix_price or "-" }}</strong>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      {% if offer.shipping_price == 0 %}
+      <span class="rounded bg-emerald-500/15 px-2 py-1 text-xs text-emerald-300">frete gratis</span>
+      {% endif %}
+      {% if offer.coupon_code %}
+      <span class="rounded bg-amber-500/15 px-2 py-1 text-xs text-amber-300">cupom {{ offer.coupon_code }}</span>
+      {% endif %}
+      {% if offer.discount_percent %}
+      <span class="rounded bg-fuchsia-500/15 px-2 py-1 text-xs text-fuchsia-300">{{ offer.discount_percent }}% off</span>
+      {% endif %}
+    </div>
+    <a href="{{ offer.url }}" target="_blank" rel="noopener" class="rounded-md bg-zinc-100 px-3 py-2 text-center text-sm font-semibold text-zinc-950 hover:bg-white">Ver oferta</a>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="rounded-lg border border-dashed border-zinc-700 p-8 text-center text-zinc-400">
+  Digite um produto com modelo, versao e capacidade para iniciar uma busca exata.
+</div>
+{% endif %}
+
